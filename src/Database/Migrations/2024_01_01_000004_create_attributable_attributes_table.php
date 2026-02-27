@@ -55,8 +55,8 @@ return new class extends Migration
         });
 
         // Create prefix indexes for TEXT columns (MySQL requires key length for TEXT/BLOB columns)
-        // SQLite doesn't support prefix indexes, so we skip them for SQLite
-        if (DB::connection()->getDriverName() !== 'sqlite') {
+        // Only MySQL supports prefix indexes, PostgreSQL and SQLite don't need/support them
+        if (DB::connection()->getDriverName() === 'mysql') {
             try {
                 DB::statement('CREATE INDEX idx_value_text ON attributable_attributes (value_text(255))');
             } catch (\Exception $e) {
